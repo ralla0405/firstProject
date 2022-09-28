@@ -14,7 +14,7 @@ func Print2(a, b interface{}) {
 	fmt.Println(a, b)
 }
 
-// Integer 타입 제한 선언
+// Integer 타입 제한 선언 (interface로 타입제한이 가능하다.)
 type Integer interface {
 	int8 | int16 | int32 | int64 | int
 }
