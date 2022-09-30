@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	gin "github.com/gin-gonic/gin"
+	_ "github.com/golang-migrate/migrate/database/postgres"
+	_ "github.com/golang-migrate/migrate/source/github"
 	"net/http"
 )
 
