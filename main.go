@@ -14,6 +14,79 @@ func Print2(a, b interface{}) {
 	fmt.Println(a, b)
 }
 
+func printArray() {
+	/*var a = []int{1, 2, 3}
+	a[1] = 10
+	fmt.Println(a)
+
+	// slice use make function
+	s := make([]int, 5, 10)
+	if s == nil {
+		println("s is nill")
+	}
+	fmt.Println(s, len(s), cap(s))
+
+	// sub-slice
+	ss := []int{0, 1, 2, 3, 4, 5}
+	ss = ss[2:5] // 2, 3, 4
+	ss = ss[1:]  // 3, 4
+	fmt.Println(ss)
+
+	// slice append and copy
+	sa := []int{0, 1}
+	sa = append(sa, 2)
+	fmt.Println(sa)
+
+	sa = append(sa, 3, 4, 5)
+	fmt.Println(sa)
+
+	// map
+	var idMap map[int]string
+	fmt.Println(idMap)
+	idMap = make(map[int]string)
+
+	// 리터럴을 사용한 초기화
+	tickers := map[string]string{
+		"GOOG": "Google Inc",
+		"MSFT": "Microsoft",
+		"FB":   "Facebook",
+	}
+	fmt.Println(tickers)
+
+	var m map[int]string
+
+	m = make(map[int]string)
+	m[901] = "Apple"
+
+	str := m[901]
+	fmt.Println(str)
+
+	noData := m[999]
+	fmt.Println(noData)
+
+	delete(m, 901)
+	fmt.Println(str)
+	fmt.Println(m[901])*/
+
+	// Check map key
+	tickers := map[string]string{
+		"GOOG": "Google Inc",
+		"MSFT": "Microsoft",
+		"FB":   "Facebook",
+		"AMZN": "Amazon",
+	}
+
+	val, exists := tickers["MSFT"] // val: value값, exitst: bool 존재 여부 값
+	if !exists {
+		fmt.Printf("No MSFT ticker %s\n", val)
+	}
+
+	// map array
+	for key, val := range tickers {
+		fmt.Println(key, val)
+	}
+}
+
 // Integer 타입 제한 선언 (interface로 타입제한이 가능하다.)
 type Integer interface {
 	int8 | int16 | int32 | int64 | int
@@ -74,5 +147,7 @@ func main() {
 			})
 		}
 	})
+
+	printArray()
 	r.Run("localhost:8080") // api를 호스트할 url과 포트번호
 }
