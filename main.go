@@ -2,11 +2,124 @@ package main
 
 import (
 	"fmt"
-	gin "github.com/gin-gonic/gin"
 	_ "github.com/golang-migrate/migrate/database/postgres"
 	_ "github.com/golang-migrate/migrate/source/github"
-	"net/http"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"time"
 )
+
+type Product struct {
+	gorm.Model
+	Code  string
+	Price uint
+}
+
+const (
+	dsn = "host=localhost user=postgres password=@Demian2020 dbname=simple_bank port=5432 sslmode=disable TimeZone=Asia/Seoul"
+)
+
+type User struct {
+	gorm.Model
+	Name     string
+	Age      int
+	Birthday time.Time
+}
+
+func main() {
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("DB 연결에 실패하였습니다.")
+	}
+
+	// 테이블 자동 생성
+	err = db.AutoMigrate(&Product{}, &User{})
+	if err != nil {
+		fmt.Println("Error occur")
+	}
+
+	// 생성
+	db.Create(&Product{Code: "D123", Price: 5400})
+
+	//var product Product
+	/*db.First(&product, 1)
+	db.First(&product, "Code = ?", "D123")
+	tx := db.Find(&product, "ID = ?", 2)
+
+	fmt.Println(tx, "123456")
+
+	fmt.Println(product.Price)
+
+	// 수정 하나의 필드만
+	db.Model(&product).Update("Price", 200)
+	fmt.Println(product.Price)
+
+	// 수정 여러 필드
+	db.Model(&product).Updates(Product{Price: 600, Code: "F42"})
+	fmt.Println(product.Code)
+	fmt.Println(product.Price)
+
+	db.Model(&product).Updates(map[string]interface{}{"Price": 300, "Code": "F43"})
+	fmt.Println(product.Code)
+	fmt.Println(product.Price)
+
+	// 삭제
+	db.Delete(&product, 1)*/
+
+	// 레코드 생성
+	user := User{Name: "Logan", Age: 33, Birthday: time.Now()}
+
+	result := db.Create(&user)
+
+	fmt.Println(user.ID)             // 입려된 데이터의 primary key를 반환합니다.
+	fmt.Println(result.Error)        // 에러를 반환합니다.
+	fmt.Println(result.RowsAffected) // 입려된 레코드의 개수를 반환합니다.
+
+	//r := gin.Default() // defalut settings
+	//
+	//Print("hello", "hello")
+	//Print("hello", 4)
+	//
+	//Print2("hello", "hello")
+	//Print2("hello", 4)
+	//// default string
+	//r.GET("/default/string", func(c *gin.Context) { // handler function
+	//	c.String(http.StatusOK, "Hello world!!!")
+	//})
+	//
+	//// default json
+	//r.GET("/defalut/json", func(c *gin.Context) {
+	//	c.JSONP(http.StatusOK, gin.H{
+	//		"reponse": "Hello world!!!",
+	//	})
+	//})
+	//
+	//// HTTP 파라미터 받기
+	//r.GET("/:name", func(c *gin.Context) {
+	//	var val = c.Param("name")
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"value": val,
+	//	})
+	//})
+	//
+	//// Body로 들어오는 POST 요청처리
+	//r.POST("/add", func(c *gin.Context) {
+	//	//var req := &Bind{}
+	//	var data TestModel
+	//	if err := c.ShouldBind(&data); err != nil {
+	//		c.JSON(http.StatusBadRequest, gin.H{
+	//			"error": fmt.Sprintf("%v", err),
+	//		})
+	//	} else {
+	//		c.JSON(http.StatusOK, gin.H{
+	//			"data": data,
+	//		})
+	//	}
+	//})
+	//
+	//printArray()
+	//r.Run("localhost:8080") // api를 호스트할 url과 포트번호
+}
 
 func Print[T1 any, T2 any](a T1, b T2) {
 	fmt.Println(a, b)
@@ -105,51 +218,4 @@ func add[T Integer](a, b T) T {
 type TestModel struct {
 	Id   int    `json:"id" binding:"required"` // binding required = not empty
 	Name string `json:"name" binding:"required"`
-}
-
-func main() {
-	r := gin.Default() // defalut settings
-
-	Print("hello", "hello")
-	Print("hello", 4)
-
-	Print2("hello", "hello")
-	Print2("hello", 4)
-	// default string
-	r.GET("/default/string", func(c *gin.Context) { // handler function
-		c.String(http.StatusOK, "Hello world!!!")
-	})
-
-	// default json
-	r.GET("/defalut/json", func(c *gin.Context) {
-		c.JSONP(http.StatusOK, gin.H{
-			"reponse": "Hello world!!!",
-		})
-	})
-
-	// HTTP 파라미터 받기
-	r.GET("/:name", func(c *gin.Context) {
-		var val = c.Param("name")
-		c.JSON(http.StatusOK, gin.H{
-			"value": val,
-		})
-	})
-
-	// Body로 들어오는 POST 요청처리
-	r.POST("/add", func(c *gin.Context) {
-		//var req := &Bind{}
-		var data TestModel
-		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": fmt.Sprintf("%v", err),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"data": data,
-			})
-		}
-	})
-
-	printArray()
-	r.Run("localhost:8080") // api를 호스트할 url과 포트번호
 }
